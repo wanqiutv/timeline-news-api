@@ -10,10 +10,10 @@
   "author": "bzhang",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.13.3",
-    "compression": "^1.5.2",
-    "cors": "^2.7.1",
-    "morgan": "^1.8.0",
+    "body-parser": "^1.17.2",
+    "compression": "^1.7.0",
+    "cors": "^2.8.4",
+    "morgan": "^1.8.2",
     "restify": "^5.2.0"
   },
   "devDependencies": {
