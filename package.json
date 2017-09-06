@@ -1,0 +1,40 @@
+{
+  "name": "timeline-news-api",
+  "version": "1.0.0",
+  "description": "timeline-news-api",
+  "scripts": {
+    "dev": "nodemon -w src --exec \"babel-node src \"",
+    "build": "babel src -s -D -d dist",
+    "start": "node dist"
+  },
+  "author": "bzhang",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "compression": "^1.5.2",
+    "cors": "^2.7.1",
+    "morgan": "^1.8.0",
+    "restify": "^5.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.9.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^3.1.1",
+    "nodemon": "^1.9.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          },
+          "modules": "commonjs",
+          "useBuiltIns": true
+        }
+      ]
+    ]
+  }
+}
