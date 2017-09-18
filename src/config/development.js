@@ -1,3 +1,3 @@
 export default {
-    videos : '~/Servers/timeline-api/videos'
+    videos : '/Users/bzhang/Servers/timeline-api/videos'
 }
