@@ -5,22 +5,29 @@
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src \"",
     "build": "babel src -s -D -d dist",
-    "start": "node dist"
+    "start": "node dist",
+    "production": "production=true node dist"
   },
   "author": "bzhang",
   "license": "ISC",
   "dependencies": {
+    "babel-eslint": "^8.0.0",
     "body-parser": "^1.13.3",
     "compression": "^1.5.2",
     "cors": "^2.7.1",
+    "eslint-plugin-html": "^3.2.2",
+    "mongoose": "^4.11.11",
     "morgan": "^1.8.0",
-    "restify": "^5.2.0"
+    "node-schedule": "^1.2.4",
+    "restify": "^5.2.0",
+    "ytdl-core": "^0.17.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.9.0",
     "babel-preset-env": "^1.6.0",
-    "eslint": "^3.1.1",
+    "eslint": "^3.19.0",
+    "eslint-config-recommended": "^1.5.0",
     "nodemon": "^1.9.2"
   },
   "babel": {
@@ -36,5 +43,20 @@
         }
       ]
     ]
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 7,
+      "sourceType ": "module"
+    },
+    "plugins": [
+      "html"
+    ],
+    "env": {
+      "node": true
+    },
+    "root": true,
+    "parser": "babel-eslint",
+    "extends":"eslint:recommended"
   }
 }
