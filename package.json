@@ -11,12 +11,9 @@
   "author": "bzhang",
   "license": "ISC",
   "dependencies": {
-    "babel-eslint": "^8.0.0",
     "body-parser": "^1.13.3",
     "compression": "^1.5.2",
     "cors": "^2.7.1",
-    "eslint-plugin-html": "^3.2.2",
-    "fluent-ffmpeg": "^2.1.2",
     "mongoose": "^4.11.11",
     "morgan": "^1.8.0",
     "node-schedule": "^1.2.4",
@@ -24,6 +21,8 @@
     "ytdl-core": "^0.17.1"
   },
   "devDependencies": {
+    "eslint-plugin-html": "^3.2.2",
+    "babel-eslint": "^8.0.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.9.0",
     "babel-preset-env": "^1.6.0",
