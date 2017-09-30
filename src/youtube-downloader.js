@@ -4,14 +4,21 @@ import {config} from './config/configuration.js';
 import fs from 'fs';
 import videoManager from './mongodb/video-manager';
 import winston from 'winston';
+import mkdirp from 'mkdirp-promise';
 
+export function localDir(name){
+    let dirPath = `${config.videos}/${name}`;
+    return dirPath;
+}
 export async function download(completeCallback) {
     let sources = await videoManager.sources();
     let count = 0;
     let total = sources.length;
     winston.log('info',`start ${total} download tasks`);
-    sources.forEach(function (source) {
-        let localUrl = `${config.videos}/${source.name}.mp4`;
+    sources.forEach(async function (source) {
+        let dirPath = localDir(source.name);
+        await mkdirp(dirPath);
+        let localUrl = `${dirPath}/${source.name}.mp4`;
         let downloadStream = ytdl(source.rawUrl, {
             filter: function (format) {
                 return format.container === 'mp4';
@@ -49,5 +56,8 @@ export var scheduleYoutubeDownloadingJob = function () {
         download();
     });
 }
+
+
+
 
 

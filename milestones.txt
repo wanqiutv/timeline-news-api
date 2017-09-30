@@ -1,0 +1,10 @@
+09.26 youtube downloader
+09.27 ffmpeg docker
+09.28 HLS stream
+09.29 workflow add & download & ffmpeg & hls
+09.30 smoke test & ui
+
+
+--------
+October :
+Highlights with TensorFlow
