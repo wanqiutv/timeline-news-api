@@ -1,59 +1,58 @@
 import schedule from 'node-schedule';
-import ytdl from 'ytdl-core';
 import {config} from './config/configuration.js';
-import fs from 'fs';
 import videoManager from './mongodb/video-manager';
 import winston from 'winston';
 import mkdirp from 'mkdirp-promise';
+import childProcess from 'child_process';
+import util from 'util';
+import {streamify} from './streamify';
 
-export function localDir(name){
+export function localDir(name) {
     let dirPath = `${config.videos}/${name}`;
     return dirPath;
 }
+export async function downloadThenStream(callback) {
+    download(function (source) {
+        streamify(source.name, 'playlist', 'out', callback);
+    })
+}
+
 export async function download(completeCallback) {
     let sources = await videoManager.sources();
     let count = 0;
     let total = sources.length;
-    winston.log('info',`start ${total} download tasks`);
+    winston.log('info', `start ${total} download tasks`);
     sources.forEach(async function (source) {
         let dirPath = localDir(source.name);
         await mkdirp(dirPath);
-        let localUrl = `${dirPath}/${source.name}.mp4`;
-        let downloadStream = ytdl(source.rawUrl, {
-            filter: function (format) {
-                return format.container === 'mp4';
+        winston.info('info', dirPath);
+        var exec = childProcess.exec;
+        let download = `youtube-dl ${source.rawUrl} -f mp4 -o ${source.name}.mp4`;
+
+        exec(download, {cwd: `${dirPath}`}, function (error, stdout, stderr) {
+            winston.log('error', util.inspect(error ? error : "success"));
+            if (!error && completeCallback instanceof Function) {
+                completeCallback(source);
+                count++;
+                winston.info('info', `complete the ${count} task`);
+                source.localUrl = `${dirPath}/${source.name}.mp4`;
+                videoManager.save(source);
+            } else {
+                winston.info('info', `failed the ${count} task`);
             }
-        });
-        let localFileStream = fs.createWriteStream(localUrl);
-        downloadStream.pipe(localFileStream);
-        downloadStream.on('error', function (error) {
-            winston.log('error',error);
-            winston.log('error','download stream error. close the local file stream');
-            localFileStream.close();
-        });
-        localFileStream.on('error', function (error) {
-            winston.log('error',error);
-            winston.log('error','local file stream error. close the download file stream');
-            downloadStream.close();
-        })
-        localFileStream.on('finish',function () {
-            source.localUrl = localUrl;
-            count++;
-            winston.log('info',`complete ${count}/${total}. ${localUrl}`);
-            videoManager.save(source);
-            if(count == total){
-                winston.log('info',`complete the all ${total} tasks`);
-                if(completeCallback instanceof  Function){
-                    completeCallback();
-                }
-            }
+            winston.info('error', util.inspect(stdout));
+            winston.info('error', util.inspect(stderr));
         });
     });
 }
 
 export var scheduleYoutubeDownloadingJob = function () {
-    return schedule.scheduleJob('45  * * * *', () => {
-        download();
+    let cronExpression = '*/4 * * *';
+    if (config.state == 'develop') {
+        cronExpression = '*/5 * * * *';
+    }
+    return schedule.scheduleJob(cronExpression, () => {
+        downloadThenStream();
     });
 }
 
